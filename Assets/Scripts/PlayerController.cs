@@ -54,6 +54,8 @@ public class PlayerController : MonoBehaviour, IHit
     [SerializeField]
     private float lifeExpectancy = 60 * 10;
 
+    protected float distanceToTravel = 10000f;
+
     void Start()
     {
         navigator = GetComponent<INavigator>();
@@ -66,9 +68,12 @@ public class PlayerController : MonoBehaviour, IHit
     void Update()
     {
         elapsedTimeOfLife += Time.deltaTime;
-        navigator.ElapsedTime((lifeExpectancy - elapsedTimeOfLife) / lifeExpectancy);
 
         var newVelocity = navigator.Move();
+
+        distanceToTravel -= Mathf.Abs(newVelocity.x);
+
+        navigator.Feedback(distanceToTravel / 10000f * 2);
 
         myRigidbody.velocity = newVelocity * velocity;
 

@@ -62,8 +62,7 @@ internal class GeneticAlgorithmTrainer : MonoBehaviour
 
     void Update()
     {
-        var game = GameObject.Find("GameController");
-        var gameController = game.GetComponent<GameController>();
+        var gameController = GameObject.Find("GameController").GetComponent<GameController>();
 
         var player = gameController.instantiatedPlayer;
 

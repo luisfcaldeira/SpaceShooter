@@ -6,6 +6,8 @@ public class SensorController : MonoBehaviour
     [SerializeField]
     private LayerMask enemyLayer;
 
+    internal float enemyX = 0;
+
     public float distanceHit = 0;
 
     [SerializeField]
@@ -35,6 +37,10 @@ public class SensorController : MonoBehaviour
         if (hit.collider)
         {
             distanceHit = hit.distance;
+            if(hit.collider.name.Contains("Enemy"))
+            {
+                enemyX = hit.collider.transform.position.x;
+            }
         }
     }
 }

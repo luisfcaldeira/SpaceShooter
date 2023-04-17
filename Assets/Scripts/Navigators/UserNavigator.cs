@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UserNavigator : MonoBehaviour, INavigator
 {
-    public void ElapsedTime(float elapsedTime)
+    public void Feedback(float elapsedTime)
     {
         
     }

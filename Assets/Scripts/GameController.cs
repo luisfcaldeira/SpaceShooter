@@ -147,7 +147,7 @@ public class GameController : MonoBehaviour
 
             if(followPlayer)
             {
-                newPosition = new Vector2(instantiatedPlayer.transform.position.x, Random.Range(5, 15));
+                newPosition = new Vector2(instantiatedPlayer.transform.position.x, 5);
             }
 
             if(IsEmptyPosition(newPosition, enemies[enemyIndex].transform.localScale))
