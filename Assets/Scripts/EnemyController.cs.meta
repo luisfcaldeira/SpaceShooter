@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: cb64005e3bfce8243a59a36f8b195850
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - shot: {instanceID: 0}
+  - bulletExit: {instanceID: 0}
+  - shipExplosion: {fileID: 2639697869896008362, guid: e5a65a5efa78ea449a3c31d893c4b0a6, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

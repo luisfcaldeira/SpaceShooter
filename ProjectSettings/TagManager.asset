@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Enemy
+  - Destruidor
+  - Tiro Player
+  - Tiro Enemy
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - Inimgos
+  - Player
+  - Tiro do player
+  - Tiro do inimigo
+  - Destruidor
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Inimigos
+    uniqueID: 3162701399
+    locked: 0
+  - name: Player
+    uniqueID: 2216846043
+    locked: 0
+  - name: Tiros
+    uniqueID: 3081196759
+    locked: 0
