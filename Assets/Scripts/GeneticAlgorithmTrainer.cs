@@ -46,8 +46,7 @@ internal class GeneticAlgorithmTrainer : MonoBehaviour
         ngen.BiasConfiguration.SetMaxAndMin(-1, 1);
 
 
-        geneticTrainer = new GeneticTrainer(new Mutater() { 
-        ChanceOfMutate = 0.9 });
+        geneticTrainer = new GeneticTrainer(new Mutater(0.9, -1, 1));
 
         nnGen = new NNGenerator(ngen, new LayersLinker());
 
