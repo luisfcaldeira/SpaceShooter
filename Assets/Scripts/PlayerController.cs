@@ -1,5 +1,7 @@
 using Assets.Scripts.Interfaces;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour, IHit
 {
@@ -48,13 +50,29 @@ public class PlayerController : MonoBehaviour, IHit
     [SerializeField]
     public INavigator navigator;
 
-    public bool IsAlive { get; private set; } = true;
-    float elapsedTimeOfLife = 0;
-
     [SerializeField]
     private float lifeExpectancy = 60 * 10;
 
+    public bool IsAlive { get; private set; } = true;
+
+    public float ReturnToZeroPoints { get; private set; }
+    public float DistancePoints { get; private set; }
+    public float MeanX { get; private set; }
+    public float LifePoints { get; private set; }
+    public float Points { get; private set; }
+
+    protected float traveledDistance = 0;
     protected float distanceToTravel = 10000f;
+
+    private float elapsedTimeOfLife = 0;
+    private float sumXAxis = 0;
+    private float updateCounter = 0;
+    private float returnToZero = 0;
+    private float returnToZeroCounter = 0;
+    private float maxX = 0;
+    private float minX = 0;
+    private float horDiff = 0.01f;
+
 
     void Start()
     {
@@ -64,18 +82,11 @@ public class PlayerController : MonoBehaviour, IHit
         myRigidbody = GetComponent<Rigidbody2D>();
     }
 
-
     void Update()
     {
-        elapsedTimeOfLife += Time.deltaTime;
+        Move();
 
-        var newVelocity = navigator.Move();
-
-        distanceToTravel -= Mathf.Abs(newVelocity.x);
-
-        navigator.Feedback(distanceToTravel / 10000f * 2);
-
-        myRigidbody.velocity = newVelocity * velocity;
+        FeedbackNavigator();
 
         Fire();
 
@@ -86,6 +97,74 @@ public class PlayerController : MonoBehaviour, IHit
         CheckLifeAndDie();
 
         GenerateShield();
+    }
+
+    private void Move()
+    {
+        var newVelocity = navigator.Move();
+
+        if (newVelocity.x > 0 && transform.position.x < limitOfX
+            || newVelocity.x < 0 && transform.position.x > -limitOfX)
+        {
+            traveledDistance += Mathf.Abs(newVelocity.x);
+        }
+
+        myRigidbody.velocity = newVelocity * velocity;
+    }
+
+    private void FeedbackNavigator()
+    {
+        updateCounter++;
+
+        elapsedTimeOfLife += Time.deltaTime;
+
+        if (transform.position.x < 0)
+        {
+            maxX = 0;
+            if (transform.position.x < minX)
+            {
+                minX = transform.position.x;
+            }
+
+            if (transform.position.x > minX + horDiff)
+            {
+                returnToZero += Mathf.Abs(transform.position.x - minX) / 30f;
+                minX = transform.position.x;
+                returnToZeroCounter++;
+                horDiff *= Mathf.Min(horDiff * 2, 1f);
+            }
+        }
+
+        if (transform.position.x > 0)
+        {
+            minX = 0;
+            if (transform.position.x > maxX)
+            {
+                maxX = transform.position.x;
+            }
+
+            if (transform.position.x < maxX - horDiff)
+            {
+                returnToZero += (maxX - transform.position.x) / 30f;
+                maxX = transform.position.x;
+                returnToZeroCounter++;
+                horDiff = Mathf.Min(horDiff * 2, 1f);
+            }
+        }
+
+
+        sumXAxis += transform.position.x;
+
+        ReturnToZeroPoints = 0;
+        if (returnToZeroCounter != 0)
+            ReturnToZeroPoints = returnToZero * 2 / returnToZeroCounter;
+
+        DistancePoints = traveledDistance / distanceToTravel;
+        LifePoints = elapsedTimeOfLife / lifeExpectancy;
+
+        Points = (LifePoints + ReturnToZeroPoints) / (2 + 1);
+
+        navigator.Feedback(Points);
     }
 
     private void FixPosition()
@@ -149,7 +228,7 @@ public class PlayerController : MonoBehaviour, IHit
         }
     }
 
-    private void Die()
+    internal void Die()
     {
         Destroy(gameObject);
         Instantiate(shipExplosion, transform.position, transform.rotation);
@@ -186,6 +265,14 @@ public class PlayerController : MonoBehaviour, IHit
         if(levelWeapon < 3)
         {
             levelWeapon++;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Destruidor"))
+        {
+            //Die();
         }
     }
 }

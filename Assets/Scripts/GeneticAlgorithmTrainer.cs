@@ -17,6 +17,7 @@ using MyNeuralNetwork.Domain.Interfaces.Networks;
 using MyNeuralNetwork.Domain.Interfaces.Networks.Circuits.Forward;
 using MyNeuralNetwork.Domain.Interfaces.Neurons.Activations;
 using MyNeuralNetwork.Domain.Interfaces.Neurons.Parts;
+using MyNeuralNetwork.Domain.Interfaces.Trainers.Genetics;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -35,18 +36,22 @@ internal class GeneticAlgorithmTrainer : MonoBehaviour
     private int actualNeural = 0;
     private int actualEpoch = 0;
 
-    GeneticTrainer geneticTrainer;
+    IGeneticTrainer geneticTrainer;
 
-    private static double LastFitness = double.MaxValue;
+    private static double LastFitness = 0;
+
+    private GameController gameController;
+    private double bestFitness = 0;
 
     void Start()
     {
+        gameController = GameObject.Find("GameController").GetComponent<GameController>();
+
         var ngen = new NeuronGenerator();
         ngen.WeightConfiguration.SetMaxAndMin(-1, 1);
         ngen.BiasConfiguration.SetMaxAndMin(-1, 1);
 
-
-        geneticTrainer = new GeneticTrainer(new Mutater(0.9, -1, 1));
+        geneticTrainer = new SimpleTrainer(new Mutater(0.5, -1, 1), true);
 
         nnGen = new NNGenerator(ngen, new LayersLinker());
 
@@ -54,25 +59,26 @@ internal class GeneticAlgorithmTrainer : MonoBehaviour
 
         for(var i = 0; i < numberOfNeuralNetworks; i++)
         {
-            neuralNetworks.Add(nnGen.Generate<SynapseManager>(new int[] { 4, 20, 20, 1 }
-            , new IActivator[] { new Relu(), new Tanh(), new Tanh(), new Tanh()}));
+            neuralNetworks.Add(nnGen.Generate<SynapseManager>(new int[] { 6, 120, 120, 120, 120, 1 } 
+            , new IActivator[] { new Relu(), new Sigmoid(), new Tanh(), new Tanh(), new Tanh(), new Tanh() }));
         }
     }
 
     void Update()
     {
-        var gameController = GameObject.Find("GameController").GetComponent<GameController>();
-
         var player = gameController.instantiatedPlayer;
+        UpdateStatus();
 
         if (player != null)
         {
             var playerController = player.GetComponent<PlayerController>();
             var navigator = playerController.navigator as AINavigator;
 
-            if(navigator != null && navigator.neuralNetwork != null)
+            if (navigator != null && navigator.neuralNetwork != null)
             {
                 LastFitness = AINavigator.LastFitness;
+                if (bestFitness < navigator.neuralNetwork.Fitness)
+                    bestFitness = navigator.neuralNetwork.Fitness;
             }
 
             if (navigator != null && navigator.neuralNetwork == null)
@@ -83,31 +89,33 @@ internal class GeneticAlgorithmTrainer : MonoBehaviour
         }
     }
 
+    private void UpdateStatus()
+    {
+        var bestNet = (NeuralNetwork)geneticTrainer.GetTheBestOne(neuralNetworks);
+        gameController.status.text = ($"Epoch reached: {actualEpoch}/{numberOfEpochs}. Last best fitness of generations: {bestNet.Fitness}. Better fitness in anytime: {bestFitness}.");
+    }
+
     private void ResetEpoch()
     {
-        var bestNet = (NeuralNetwork)GeneticTrainer.GetTheBestOne(neuralNetworks);
+        NeuralNetwork neuralNetwork = (NeuralNetwork)geneticTrainer.GetTheBestOne(neuralNetworks);
 
         if (actualNeural == numberOfNeuralNetworks && actualEpoch < numberOfEpochs)
         {
-            
             geneticTrainer.ToMutate(neuralNetworks);
             actualNeural = 0;
             actualEpoch++;
-
-            Debug.Log($"Epoch reached: {actualEpoch}/{numberOfEpochs}. Best fitness: {bestNet.Fitness}");
-
         }
 
-        if (actualEpoch >= numberOfEpochs || LastFitness <= 0.1)
+        if (actualEpoch >= numberOfEpochs || LastFitness > 0.9)
         {
             var persistence = new NeuralNetworkPersistenceService(GenerateMapper());
             persistence.Path = "C:\\Projetos\\Unity\\SpaceShooter\\";
             persistence.FileName = "neural_network.txt";
 
-            NeuralNetwork neuralNetwork = (NeuralNetwork)GeneticTrainer.GetTheBestOne(neuralNetworks);
             persistence.Save(neuralNetwork);
-            Debug.Log($"Number of epochs reached. Fitness: {neuralNetwork.Fitness}");
-            Debug.Break();
+            
+            gameController.status.text = ($"Number of epochs reached. Fitness: {neuralNetwork.Fitness}. Saved in {persistence.Path}.");
+            gameController.EndGame();
         }
     }
 

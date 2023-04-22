@@ -7,9 +7,21 @@ public class AINavigator : MonoBehaviour, INavigator
     public INeuralNetwork neuralNetwork = null;
     public static double LastFitness = 0;
 
+    internal double input1 = 0;
+    internal double input2 = 0;
+    internal double input3 = 0;
+    internal double input4 = 0;
+    internal double input5 = 0;
+    internal double x = 0;
+
+    internal float output = 0;
+
     public Vector2 Move()
     {
+        
+
         float movement = 0;
+
         if (neuralNetwork != null)
         {
             movement = GenerateMovement();
@@ -21,76 +33,66 @@ public class AINavigator : MonoBehaviour, INavigator
     {
         var rightSensor = GetSensor("RightSensor");
         var leftSensor = GetSensor("LeftSensor");
+        var sensor04 = GetSensor("Sensor04");
+        var sensor05 = GetSensor("Sensor05");
 
         var frontSensor = GetFrontSensor();
 
-        double input1 = frontSensor / 10d;
-        double input2 = rightSensor.distanceHit / 10d;
-        double input3 = leftSensor.distanceHit / 10d;
+        const double v = 30d;
 
-        return (float)neuralNetwork.Predict(
-            new MyNeuralNetwork.Domain.Entities.Nets.IO.Inputs.Input[] {
-                    new MyNeuralNetwork.Domain.Entities.Nets.IO.Inputs.Input(EnemyHorizontalDiff()),
+        input1 = frontSensor.distanceHit / v;
+        input2 = rightSensor.distanceHit / v;
+        input3 = leftSensor.distanceHit / v;
+        input4 = sensor04.distanceHit / v;
+        input5 = sensor05.distanceHit / v;
+
+        if (input1 == 0 && input2 == 0 && input3 == 0 && input4 == 0 && input5 == 0)
+            return 0;
+
+        if(rightSensor.distanceHit <= 1 || leftSensor.distanceHit <= 1)
+        {
+            GetComponent<PlayerController>().Die();
+        }
+
+        x = GetSensor("Sensor01").transform.position.x / v;
+
+        output = (float)neuralNetwork.Predict(
+                    new MyNeuralNetwork.Domain.Entities.Nets.IO.Inputs.Input[] {
+                    new MyNeuralNetwork.Domain.Entities.Nets.IO.Inputs.Input(x),
                     new MyNeuralNetwork.Domain.Entities.Nets.IO.Inputs.Input(input1),
                     new MyNeuralNetwork.Domain.Entities.Nets.IO.Inputs.Input(input2),
                     new MyNeuralNetwork.Domain.Entities.Nets.IO.Inputs.Input(input3),
-            })[0];
+                    new MyNeuralNetwork.Domain.Entities.Nets.IO.Inputs.Input(input4),
+                    new MyNeuralNetwork.Domain.Entities.Nets.IO.Inputs.Input(input5),
+                    })[0];
+
+
+        return output;
     }
 
-    private static float EnemyHorizontalDiff()
-    {
-        var sensor01 = GetSensor("Sensor01");
-        float enemyX = EnemyHitPenalty();
-        return Mathf.Max(1 - Mathf.Abs(enemyX - sensor01.gameObject.transform.position.x), 0);
-    }
-
-    private static float GetFrontSensor()
-    {
-        var sensor01 = GetSensor("Sensor01");
-        var sensor02 = GetSensor("Sensor02");
-        var sensor03 = GetSensor("Sensor03");
-
-        return Mathf.Min(sensor01.distanceHit, sensor02.distanceHit, sensor03.distanceHit);
-    }
-
-    private static float EnemyHitPenalty()
+    private static SensorController GetFrontSensor()
     {
         var sensor01 = GetSensor("Sensor01");
         var sensor02 = GetSensor("Sensor02");
         var sensor03 = GetSensor("Sensor03");
 
-        var enemyX = sensor01.enemyX;
-        var minDistance = sensor01.distanceHit;
+        var result = sensor01;
 
-        if (sensor02.distanceHit != 0 && (sensor02.distanceHit < minDistance || minDistance == 0))
-        {
-            enemyX = sensor02.enemyX;
-            minDistance = sensor02.distanceHit;
-        }
+        if (sensor02.distanceHit < sensor01.distanceHit)
+            result = sensor02;
 
-        if (sensor03.distanceHit != 0 && (sensor03.distanceHit < minDistance || minDistance == 0))
-        {
-            enemyX = sensor03.enemyX;
-        }
+        if(sensor03.distanceHit < sensor02.distanceHit) 
+            result = sensor03;
 
-        return enemyX;
+        return result;
     }
 
     public void Feedback(float points)
     {
-        var rightSensor = GetSensor("RightSensor");
-        var leftSensor = GetSensor("LeftSensor");
+        LastFitness = points;
 
-        var enemyHitPenalty = EnemyHorizontalDiff();
-
-        LastFitness = points + enemyHitPenalty + Mathf.Max(2 - rightSensor.distanceHit, 0) + Mathf.Max(2 - leftSensor.distanceHit, 0);
-
-        neuralNetwork.Fitness = LastFitness;
-    }
-
-    private static float GetDistanceWall(SensorController rightSensor, SensorController leftSensor)
-    {
-        return Mathf.Abs((leftSensor.distanceHit - rightSensor.distanceHit) / 10f);
+        if(neuralNetwork != null)
+            neuralNetwork.Fitness = LastFitness;
     }
 
     private static SensorController GetSensor(string Name)

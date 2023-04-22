@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
@@ -38,6 +39,54 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private bool continum = false;
 
+    [SerializeField]
+    private bool generateEnemies = true;
+
+
+    [SerializeField]
+    private Text textReturnToZeroPoints;
+
+    [SerializeField]
+    private Text textDistancePoints;
+
+    [SerializeField]
+    private Text textMeanX;
+
+    [SerializeField]
+    private Text textLifePoints;
+
+    [SerializeField]
+    private Text textPoints;
+
+    [SerializeField]
+    private Text textX;
+
+    [SerializeField]
+    private Text input1;
+
+    [SerializeField]
+    private Text input2;
+
+    [SerializeField]
+    private Text input3;
+
+    [SerializeField]
+    private Text input4;
+
+    [SerializeField]
+    private Text input5;
+
+    [SerializeField]
+    private Text x;
+
+
+    [SerializeField]
+    internal Text status;
+
+    [SerializeField]
+    internal Text output;
+
+
     void Start()
     {
         RestartTimer();
@@ -62,10 +111,38 @@ public class GameController : MonoBehaviour
 
         ResetSceneIfPlayerIsDead();
 
-        if (timer <= 0 && actualAmount <= patch)
+        GenerateInformation();
+
+        if (generateEnemies && timer <= 0 && actualAmount <= patch)
         {
             RestartTimer();
             EnemiesGenerate();
+        }
+
+    }
+
+    private void GenerateInformation()
+    {
+        if (instantiatedPlayer != null)
+        {
+            var playerController = instantiatedPlayer.GetComponent<PlayerController>();
+            var aiNavigator = instantiatedPlayer.GetComponent<AINavigator>();
+
+            textReturnToZeroPoints.text = playerController.ReturnToZeroPoints.ToString();
+            textDistancePoints.text = playerController.DistancePoints.ToString();
+            textMeanX.text = playerController.MeanX.ToString();
+            textLifePoints.text = playerController.LifePoints.ToString();
+            textPoints.text = playerController.Points.ToString();
+            textX.text = instantiatedPlayer.transform.position.x.ToString();
+
+            input1.text = aiNavigator.input1.ToString();
+            input2.text = aiNavigator.input2.ToString();
+            input3.text = aiNavigator.input3.ToString();
+            input4.text = aiNavigator.input4.ToString();
+            input5.text = aiNavigator.input5.ToString();
+            x.text = aiNavigator.x.ToString();
+
+            output.text = aiNavigator.output.ToString();
         }
     }
 
@@ -164,6 +241,11 @@ public class GameController : MonoBehaviour
                 i++;
             }
         }
+    }
+
+    internal void EndGame()
+    {
+        Time.timeScale = 0;
     }
 
     private bool IsEmptyPosition(Vector3 vector, Vector3 size)
