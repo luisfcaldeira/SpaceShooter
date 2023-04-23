@@ -26,7 +26,7 @@ public class SensorController : MonoBehaviour
     {
         distanceHit = 0;
 
-        Vector2 direction = new Vector2(verticalDirection, horizontalDirection);
+        Vector2 direction = new Vector2(horizontalDirection, verticalDirection);
 
         ray = new Ray(transform.position, direction);
 

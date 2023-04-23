@@ -59,20 +59,21 @@ public class PlayerController : MonoBehaviour, IHit
     public float DistancePoints { get; private set; }
     public float MeanX { get; private set; }
     public float LifePoints { get; private set; }
+    public float DeadEnemies { get; private set; }
     public float Points { get; private set; }
 
     protected float traveledDistance = 0;
     protected float distanceToTravel = 10000f;
 
     private float elapsedTimeOfLife = 0;
-    private float sumXAxis = 0;
-    private float updateCounter = 0;
+
     private float returnToZero = 0;
     private float returnToZeroCounter = 0;
     private float maxX = 0;
     private float minX = 0;
     private float horDiff = 0.01f;
 
+    internal float deadEnemies = 0;
 
     void Start()
     {
@@ -107,15 +108,12 @@ public class PlayerController : MonoBehaviour, IHit
             || newVelocity.x < 0 && transform.position.x > -limitOfX)
         {
             traveledDistance += Mathf.Abs(newVelocity.x);
+            myRigidbody.velocity = newVelocity * velocity;
         }
-
-        myRigidbody.velocity = newVelocity * velocity;
     }
 
     private void FeedbackNavigator()
     {
-        updateCounter++;
-
         elapsedTimeOfLife += Time.deltaTime;
 
         if (transform.position.x < 0)
@@ -128,7 +126,7 @@ public class PlayerController : MonoBehaviour, IHit
 
             if (transform.position.x > minX + horDiff)
             {
-                returnToZero += Mathf.Abs(transform.position.x - minX) / 30f;
+                returnToZero += Mathf.Abs(transform.position.x - minX) / 9f;
                 minX = transform.position.x;
                 returnToZeroCounter++;
                 horDiff *= Mathf.Min(horDiff * 2, 1f);
@@ -145,15 +143,12 @@ public class PlayerController : MonoBehaviour, IHit
 
             if (transform.position.x < maxX - horDiff)
             {
-                returnToZero += (maxX - transform.position.x) / 30f;
+                returnToZero += (maxX - transform.position.x) / 9f;
                 maxX = transform.position.x;
                 returnToZeroCounter++;
                 horDiff = Mathf.Min(horDiff * 2, 1f);
             }
         }
-
-
-        sumXAxis += transform.position.x;
 
         ReturnToZeroPoints = 0;
         if (returnToZeroCounter != 0)
@@ -161,8 +156,9 @@ public class PlayerController : MonoBehaviour, IHit
 
         DistancePoints = traveledDistance / distanceToTravel;
         LifePoints = elapsedTimeOfLife / lifeExpectancy;
+        DeadEnemies = deadEnemies * 4f / 100f;
 
-        Points = (LifePoints + ReturnToZeroPoints) / (2 + 1);
+        Points = (LifePoints + ReturnToZeroPoints + DeadEnemies) / (2 + 4 + 1);
 
         navigator.Feedback(Points);
     }

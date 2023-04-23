@@ -19,6 +19,7 @@ using MyNeuralNetwork.Domain.Interfaces.Neurons.Activations;
 using MyNeuralNetwork.Domain.Interfaces.Neurons.Parts;
 using MyNeuralNetwork.Domain.Interfaces.Trainers.Genetics;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using UnityEngine;
 
 internal class GeneticAlgorithmTrainer : MonoBehaviour
@@ -59,9 +60,27 @@ internal class GeneticAlgorithmTrainer : MonoBehaviour
 
         for(var i = 0; i < numberOfNeuralNetworks; i++)
         {
-            neuralNetworks.Add(nnGen.Generate<SynapseManager>(new int[] { 6, 120, 120, 120, 120, 1 } 
-            , new IActivator[] { new Relu(), new Sigmoid(), new Tanh(), new Tanh(), new Tanh(), new Tanh() }));
+            int[] layers = GenerateLayerFormat();
+
+            neuralNetworks.Add(nnGen.Generate<SynapseManager, Tanh>(layers));
         }
+    }
+
+    private static int[] GenerateLayerFormat()
+    {
+        var qtdLayers = 5;
+        var qtdNeurons = 64;
+        var qtdNeuronsIn = 32;
+        var qtdNeuronsOut = 1;
+
+        var layers = new int[qtdLayers];
+        layers[0] = qtdNeuronsIn;
+        for (var j = 1; j < qtdLayers - 1; j++)
+        {
+            layers[j] = qtdNeurons;
+        }
+        layers[qtdLayers - 1] = qtdNeuronsOut;
+        return layers;
     }
 
     void Update()

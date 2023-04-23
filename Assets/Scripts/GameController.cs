@@ -3,8 +3,12 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
+
     [SerializeField]
     private GameObject[] enemies;
+   
+    [SerializeField]
+    private float enemyVelocity = 7f; 
 
     private float timer;
     
@@ -60,21 +64,6 @@ public class GameController : MonoBehaviour
 
     [SerializeField]
     private Text textX;
-
-    [SerializeField]
-    private Text input1;
-
-    [SerializeField]
-    private Text input2;
-
-    [SerializeField]
-    private Text input3;
-
-    [SerializeField]
-    private Text input4;
-
-    [SerializeField]
-    private Text input5;
 
     [SerializeField]
     private Text x;
@@ -135,11 +124,6 @@ public class GameController : MonoBehaviour
             textPoints.text = playerController.Points.ToString();
             textX.text = instantiatedPlayer.transform.position.x.ToString();
 
-            input1.text = aiNavigator.input1.ToString();
-            input2.text = aiNavigator.input2.ToString();
-            input3.text = aiNavigator.input3.ToString();
-            input4.text = aiNavigator.input4.ToString();
-            input5.text = aiNavigator.input5.ToString();
             x.text = aiNavigator.x.ToString();
 
             output.text = aiNavigator.output.ToString();
@@ -225,6 +209,15 @@ public class GameController : MonoBehaviour
             if(followPlayer)
             {
                 newPosition = new Vector2(instantiatedPlayer.transform.position.x, 5);
+                if(instantiatedPlayer.transform.position.x > 9 )
+                {
+                    newPosition = new Vector2(9, 5);
+                }
+
+                if (instantiatedPlayer.transform.position.x < -9)
+                {
+                    newPosition = new Vector2(-9, 5);
+                }
             }
 
             if(IsEmptyPosition(newPosition, enemies[enemyIndex].transform.localScale))
@@ -234,7 +227,7 @@ public class GameController : MonoBehaviour
                 var enemyController = enemyInstance.GetComponent<EnemyController>();
 
                 if(continum)
-                    enemyController.velocity = 7f;
+                    enemyController.velocity = enemyVelocity;
 
                 enemyController.ActionOnDestroy += () => { actualAmount--; };
                 enemyInstance.transform.position = newPosition;
