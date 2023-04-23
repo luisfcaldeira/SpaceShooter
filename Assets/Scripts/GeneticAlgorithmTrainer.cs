@@ -52,7 +52,7 @@ internal class GeneticAlgorithmTrainer : MonoBehaviour
         ngen.WeightConfiguration.SetMaxAndMin(-1, 1);
         ngen.BiasConfiguration.SetMaxAndMin(-1, 1);
 
-        geneticTrainer = new SimpleTrainer(new Mutater(0.5, -1, 1), true);
+        geneticTrainer = new SimpleTrainer(new Mutater(0.9, -0.5, 0.5), true);
 
         nnGen = new NNGenerator(ngen, new LayersLinker());
 
@@ -69,7 +69,7 @@ internal class GeneticAlgorithmTrainer : MonoBehaviour
     private static int[] GenerateLayerFormat()
     {
         var qtdLayers = 5;
-        var qtdNeurons = 64;
+        var qtdNeurons = 128;
         var qtdNeuronsIn = 32;
         var qtdNeuronsOut = 1;
 
@@ -104,6 +104,7 @@ internal class GeneticAlgorithmTrainer : MonoBehaviour
             {
                 ResetEpoch();
                 navigator.neuralNetwork = neuralNetworks[actualNeural++];
+                navigator.actualInvidiual = actualNeural;
             }
         }
     }
@@ -125,7 +126,7 @@ internal class GeneticAlgorithmTrainer : MonoBehaviour
             actualEpoch++;
         }
 
-        if (actualEpoch >= numberOfEpochs || LastFitness > 0.9)
+        if (actualEpoch >= numberOfEpochs || neuralNetwork.Fitness > 0.9)
         {
             var persistence = new NeuralNetworkPersistenceService(GenerateMapper());
             persistence.Path = "C:\\Projetos\\Unity\\SpaceShooter\\";

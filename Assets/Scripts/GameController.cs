@@ -1,4 +1,3 @@
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -69,12 +68,17 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private Text x;
 
+    [SerializeField]
+    private Text textActualIndividual;
 
     [SerializeField]
     internal Text status;
 
     [SerializeField]
     internal Text output;
+
+    [SerializeField]
+    internal Text textMutations;
 
     [SerializeField]
     internal float timeScale = 1.0f;
@@ -131,7 +135,9 @@ public class GameController : MonoBehaviour
 
             x.text = aiNavigator.x.ToString();
 
+            textActualIndividual.text = aiNavigator.actualInvidiual.ToString();
             output.text = aiNavigator.output.ToString();
+            textMutations.text = aiNavigator.neuralNetwork.CounterOfMutations.ToString();
         }
     }
 
@@ -195,6 +201,7 @@ public class GameController : MonoBehaviour
         var i = 0;
         var tentativas = 0;
         var totalOfEneimes = patchSize;
+        var playerController = instantiatedPlayer.GetComponent<PlayerController>();
 
         if (continum)
             totalOfEneimes = 1;
@@ -213,15 +220,15 @@ public class GameController : MonoBehaviour
 
             if(followPlayer)
             {
-                newPosition = new Vector2(instantiatedPlayer.transform.position.x, 5);
-                if(instantiatedPlayer.transform.position.x > 9 )
+                newPosition = new Vector2(playerController.myPosition.x, 5);
+                if(playerController.myPosition.x > 8.20f )
                 {
-                    newPosition = new Vector2(9, 5);
+                    newPosition = new Vector2(8.20f, 5);
                 }
 
-                if (instantiatedPlayer.transform.position.x < -9)
+                if (playerController.myPosition.x < -8.20f)
                 {
-                    newPosition = new Vector2(-9, 5);
+                    newPosition = new Vector2(-8.20f, 5);
                 }
             }
 

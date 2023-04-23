@@ -470,7 +470,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 466bdaade9d4c054f8ea5ebd9c39e1f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocity: 7
+  velocity: 5
   life: 1
   fireCooldown: 0.2
   bullet1: {fileID: 471861654777469940, guid: 5d9fa9343e141274f98512c3150dc26a, type: 3}
@@ -484,7 +484,7 @@ MonoBehaviour:
   amountShieldCooldown: 30
   shieldCooldown: 0
   lifeExpectancy: 600
-  avoidEnemies: 500
+  avoidEnemies: 200
 --- !u!114 &-6428830196649851674
 MonoBehaviour:
   m_ObjectHideFlags: 0

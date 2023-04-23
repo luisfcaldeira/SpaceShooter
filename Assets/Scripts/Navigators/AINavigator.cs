@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Interfaces;
 using MyNeuralNetwork.Domain.Interfaces.Networks;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AINavigator : MonoBehaviour, INavigator
 {
@@ -10,6 +11,7 @@ public class AINavigator : MonoBehaviour, INavigator
     internal double x = 0;
 
     internal float output = 0;
+    internal int actualInvidiual;
 
     public Vector2 Move()
     {

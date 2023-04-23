@@ -54,6 +54,8 @@ public class PlayerController : MonoBehaviour, IHit
     [SerializeField]
     private float lifeExpectancy = 60 * 10;
 
+    internal Vector2 myPosition { get; private set; }
+
     public bool IsAlive { get; private set; } = true;
 
     public float ReturnToZeroPoints { get; private set; }
@@ -173,7 +175,8 @@ public class PlayerController : MonoBehaviour, IHit
         var actualY = Mathf.Clamp(transform.position.y, -limitOfY, limitOfY);
 
         Vector3 newPosition = new Vector3(actualX, actualY);
-        transform.position = newPosition;
+        transform.position = new Vector2(newPosition.x, newPosition.y);
+        myPosition = new Vector2(newPosition.x, newPosition.y);
     }
 
     public void Fire()
