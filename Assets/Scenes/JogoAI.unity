@@ -123,17 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &98214191 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8926637027620391625, guid: e1b564446f1ef3a43a27f209b5cd502f, type: 3}
-  m_PrefabInstance: {fileID: 8926637027583273958}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &118815988
 GameObject:
   m_ObjectHideFlags: 0
@@ -179,17 +168,6 @@ MonoBehaviour:
 --- !u!114 &182488562 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8926637027400853012, guid: e1b564446f1ef3a43a27f209b5cd502f, type: 3}
-  m_PrefabInstance: {fileID: 8926637027583273958}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &202150986 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8926637027516989356, guid: e1b564446f1ef3a43a27f209b5cd502f, type: 3}
   m_PrefabInstance: {fileID: 8926637027583273958}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
@@ -477,39 +455,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1503594476 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8926637026618125322, guid: e1b564446f1ef3a43a27f209b5cd502f, type: 3}
-  m_PrefabInstance: {fileID: 8926637027583273958}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1578909705 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8926637026677058543, guid: e1b564446f1ef3a43a27f209b5cd502f, type: 3}
-  m_PrefabInstance: {fileID: 8926637027583273958}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1731240323 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8926637027060058725, guid: e1b564446f1ef3a43a27f209b5cd502f, type: 3}
-  m_PrefabInstance: {fileID: 8926637027583273958}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1759865938
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -672,7 +617,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 259356597585357866, guid: e8b1ebd91c0e2ce47b4571b9af3a3bad, type: 3}
       propertyPath: numberOfNeuralNetworks
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 259356597585357868, guid: e8b1ebd91c0e2ce47b4571b9af3a3bad, type: 3}
       propertyPath: m_Name
@@ -754,23 +699,23 @@ PrefabInstance:
     - target: {fileID: 7565666619616618414, guid: 756aa8a74cf767b49a5c0726fa127925, type: 3}
       propertyPath: input1
       value: 
-      objectReference: {fileID: 1578909705}
+      objectReference: {fileID: 0}
     - target: {fileID: 7565666619616618414, guid: 756aa8a74cf767b49a5c0726fa127925, type: 3}
       propertyPath: input2
       value: 
-      objectReference: {fileID: 98214191}
+      objectReference: {fileID: 0}
     - target: {fileID: 7565666619616618414, guid: 756aa8a74cf767b49a5c0726fa127925, type: 3}
       propertyPath: input3
       value: 
-      objectReference: {fileID: 1731240323}
+      objectReference: {fileID: 0}
     - target: {fileID: 7565666619616618414, guid: 756aa8a74cf767b49a5c0726fa127925, type: 3}
       propertyPath: input4
       value: 
-      objectReference: {fileID: 1503594476}
+      objectReference: {fileID: 0}
     - target: {fileID: 7565666619616618414, guid: 756aa8a74cf767b49a5c0726fa127925, type: 3}
       propertyPath: input5
       value: 
-      objectReference: {fileID: 202150986}
+      objectReference: {fileID: 0}
     - target: {fileID: 7565666619616618414, guid: 756aa8a74cf767b49a5c0726fa127925, type: 3}
       propertyPath: output
       value: 
@@ -791,6 +736,10 @@ PrefabInstance:
       propertyPath: textMeanX
       value: 
       objectReference: {fileID: 125388937}
+    - target: {fileID: 7565666619616618414, guid: 756aa8a74cf767b49a5c0726fa127925, type: 3}
+      propertyPath: timeScale
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7565666619616618414, guid: 756aa8a74cf767b49a5c0726fa127925, type: 3}
       propertyPath: textPoints
       value: 

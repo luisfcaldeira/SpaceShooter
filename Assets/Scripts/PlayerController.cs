@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour, IHit
 {
+    
     [SerializeField]
     private float velocity = 5f;
 
@@ -74,6 +75,9 @@ public class PlayerController : MonoBehaviour, IHit
     private float horDiff = 0.01f;
 
     internal float deadEnemies = 0;
+
+    [SerializeField]
+    private float avoidEnemies = 100f;
 
     void Start()
     {
@@ -156,7 +160,7 @@ public class PlayerController : MonoBehaviour, IHit
 
         DistancePoints = traveledDistance / distanceToTravel;
         LifePoints = elapsedTimeOfLife / lifeExpectancy;
-        DeadEnemies = deadEnemies * 4f / 100f;
+        DeadEnemies = deadEnemies * 4f / avoidEnemies;
 
         Points = (LifePoints + ReturnToZeroPoints + DeadEnemies) / (2 + 4 + 1);
 

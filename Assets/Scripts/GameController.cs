@@ -1,3 +1,4 @@
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -75,9 +76,13 @@ public class GameController : MonoBehaviour
     [SerializeField]
     internal Text output;
 
+    [SerializeField]
+    internal float timeScale = 1.0f;
+
 
     void Start()
     {
+        Time.timeScale = timeScale;
         RestartTimer();
         InstantiatePlayer();
         

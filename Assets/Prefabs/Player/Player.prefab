@@ -484,6 +484,7 @@ MonoBehaviour:
   amountShieldCooldown: 30
   shieldCooldown: 0
   lifeExpectancy: 600
+  avoidEnemies: 500
 --- !u!114 &-6428830196649851674
 MonoBehaviour:
   m_ObjectHideFlags: 0
