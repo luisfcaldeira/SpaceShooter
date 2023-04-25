@@ -126,18 +126,24 @@ public class GameController : MonoBehaviour
             var playerController = instantiatedPlayer.GetComponent<PlayerController>();
             var aiNavigator = instantiatedPlayer.GetComponent<AINavigator>();
 
-            textReturnToZeroPoints.text = playerController.ReturnToZeroPoints.ToString();
-            textDistancePoints.text = playerController.DistancePoints.ToString();
-            textMeanX.text = playerController.MeanX.ToString();
-            textLifePoints.text = playerController.LifePoints.ToString();
-            textPoints.text = playerController.Points.ToString();
-            textX.text = instantiatedPlayer.transform.position.x.ToString();
+            FillText(textReturnToZeroPoints, playerController.ReturnToZeroPoints);
+            FillText(textDistancePoints, playerController.DistancePoints);
+            FillText(textMeanX, playerController.MeanX);
+            FillText(textLifePoints, playerController.LifePoints);
+            FillText(textPoints, playerController.Points);
+            FillText(textX, instantiatedPlayer.transform.position.x);
+            FillText(x, (float)aiNavigator.x);
+            FillText(textActualIndividual, aiNavigator.actualInvidiual);
+            FillText(output, aiNavigator.output);
+            FillText(textMutations, aiNavigator.neuralNetwork.CounterOfMutations);
+        }
+    }
 
-            x.text = aiNavigator.x.ToString();
-
-            textActualIndividual.text = aiNavigator.actualInvidiual.ToString();
-            output.text = aiNavigator.output.ToString();
-            textMutations.text = aiNavigator.neuralNetwork.CounterOfMutations.ToString();
+    private void FillText(Text text, float value)
+    {
+        if (text != null)
+        {
+            text.text = value.ToString();
         }
     }
 

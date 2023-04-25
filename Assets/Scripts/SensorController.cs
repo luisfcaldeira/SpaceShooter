@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Entities.Sensors;
+using UnityEngine;
 
 
 public class SensorController : MonoBehaviour
@@ -16,31 +17,32 @@ public class SensorController : MonoBehaviour
     [SerializeField]
     private float horizontalDirection = 0;
 
-    Ray ray;
-
     void Start()
     {
+        
     }
 
     void Update()
     {
         distanceHit = 0;
 
-        Vector2 direction = new Vector2(horizontalDirection, verticalDirection);
+        var myRay = RayBuilder.WithOrigin(transform.position)
+            .WithHorizontalDirection(horizontalDirection)
+            .WithVerticalDirection(verticalDirection)
+            .Build();
 
-        ray = new Ray(transform.position, direction);
-
-        Debug.DrawRay(ray.origin, direction);
-
-        var hit = Physics2D.Raycast(ray.origin, direction, 50, enemyLayer);
+        var hit = Sensor.WithDefaultDistance()
+            .WithLayerMask(enemyLayer)
+            .GetHit(myRay);
 
         if (hit.collider)
         {
             distanceHit = hit.distance;
-            if(hit.collider.name.Contains("Enemy"))
+            if (hit.collider.name.Contains("Enemy"))
             {
                 enemyX = hit.collider.transform.position.x;
             }
         }
     }
+
 }

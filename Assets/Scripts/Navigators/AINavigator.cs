@@ -1,7 +1,6 @@
 ﻿using Assets.Scripts.Interfaces;
 using MyNeuralNetwork.Domain.Interfaces.Networks;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class AINavigator : MonoBehaviour, INavigator
 {
@@ -15,8 +14,6 @@ public class AINavigator : MonoBehaviour, INavigator
 
     public Vector2 Move()
     {
-        
-
         float movement = 0;
 
         if (neuralNetwork != null)
@@ -41,14 +38,18 @@ public class AINavigator : MonoBehaviour, INavigator
         int qtdInputs = 32;
         var inputs = new MyNeuralNetwork.Domain.Entities.Nets.IO.Inputs.Input[qtdInputs];
 
-        x = GetSensor("Sensor01").transform.position.x / 9f;
-        inputs[0] = new MyNeuralNetwork.Domain.Entities.Nets.IO.Inputs.Input(x);
-
-        for (var i = 1; i < qtdInputs; i++)
+        var sensor1 = GetSensor("Sensor01");
+        if(sensor1 != null)
         {
-            var sensorName = i.ToString().PadLeft(2, '0');
-            var sensor = GetSensor("Sensor" + sensorName);
-            inputs[i] = new MyNeuralNetwork.Domain.Entities.Nets.IO.Inputs.Input(sensor.distanceHit / v);
+            x = sensor1.transform.position.x / 9f;
+            inputs[0] = new MyNeuralNetwork.Domain.Entities.Nets.IO.Inputs.Input(x);
+
+            for (var i = 1; i < qtdInputs; i++)
+            {
+                var sensorName = i.ToString().PadLeft(2, '0');
+                var sensor = GetSensor("Sensor" + sensorName);
+                inputs[i] = new MyNeuralNetwork.Domain.Entities.Nets.IO.Inputs.Input(sensor.distanceHit / v);
+            }
         }
 
         return inputs;
@@ -64,6 +65,9 @@ public class AINavigator : MonoBehaviour, INavigator
 
     private static SensorController GetSensor(string Name)
     {
+        if (GameObject.Find(Name) == null)
+            return null;
+
         return GameObject.Find(Name).GetComponent<SensorController>();
     }
 

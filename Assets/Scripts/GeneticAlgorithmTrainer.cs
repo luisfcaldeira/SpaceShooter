@@ -112,7 +112,8 @@ internal class GeneticAlgorithmTrainer : MonoBehaviour
     private void UpdateStatus()
     {
         var bestNet = (NeuralNetwork)geneticTrainer.GetTheBestOne(neuralNetworks);
-        gameController.status.text = ($"Epoch reached: {actualEpoch}/{numberOfEpochs}. Last best fitness of generations: {bestNet.Fitness}. Better fitness in anytime: {bestFitness}.");
+        if(gameController.status != null)
+            gameController.status.text = ($"Epoch reached: {actualEpoch}/{numberOfEpochs}. Last best fitness of generations: {bestNet.Fitness}. Better fitness in anytime: {bestFitness}.");
     }
 
     private void ResetEpoch()
