@@ -27,6 +27,8 @@ public class AINavigator : MonoBehaviour, INavigator
     {
         var inputs = FillInputs();
 
+        if (inputs == null) return 0;
+         
         output = (float)neuralNetwork.Predict(inputs)[0];
 
         return output;
@@ -34,24 +36,22 @@ public class AINavigator : MonoBehaviour, INavigator
 
     private MyNeuralNetwork.Domain.Entities.Nets.IO.Inputs.Input[] FillInputs()
     {
-        const double v = 30d;
-        int qtdInputs = 32;
+        var hits = GetHits("Sensors");
+
+        if (hits == null || hits[0].transform == null)
+            return null;
+
+        double v = 30d;
+        int qtdInputs = hits.Length + 1;
         var inputs = new MyNeuralNetwork.Domain.Entities.Nets.IO.Inputs.Input[qtdInputs];
 
-        var sensor1 = GetSensor("Sensor01");
-        if(sensor1 != null)
+        x = hits[0].transform.position.x / 9f;
+        inputs[0] = new MyNeuralNetwork.Domain.Entities.Nets.IO.Inputs.Input(x);
+
+        for (var i = 0; i < hits.Length; i++)
         {
-            x = sensor1.transform.position.x / 9f;
-            inputs[0] = new MyNeuralNetwork.Domain.Entities.Nets.IO.Inputs.Input(x);
-
-            for (var i = 1; i < qtdInputs; i++)
-            {
-                var sensorName = i.ToString().PadLeft(2, '0');
-                var sensor = GetSensor("Sensor" + sensorName);
-                inputs[i] = new MyNeuralNetwork.Domain.Entities.Nets.IO.Inputs.Input(sensor.distanceHit / v);
-            }
+            inputs[i + 1] = new MyNeuralNetwork.Domain.Entities.Nets.IO.Inputs.Input(hits[i].distance / v);
         }
-
         return inputs;
     }
 
@@ -63,13 +63,11 @@ public class AINavigator : MonoBehaviour, INavigator
             neuralNetwork.Fitness = LastFitness;
     }
 
-    private static SensorController GetSensor(string Name)
+    private static RaycastHit2D[] GetHits(string name)
     {
-        if (GameObject.Find(Name) == null)
-            return null;
+        if(GameObject.Find(name) == null) return null;
 
-        return GameObject.Find(Name).GetComponent<SensorController>();
+        return GameObject.Find(name).GetComponent<MultipleSensorsController>().hits;
     }
-
 }
 

@@ -341,7 +341,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b6234cb941e6148b3193c3660d9377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfSensors: 100
+  numberOfSensors: 35
   layerMask:
     serializedVersion: 2
     m_Bits: 1600

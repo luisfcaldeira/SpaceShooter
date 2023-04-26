@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Assets.Scripts.AI.Supports;
+using AutoMapper;
 using Core.Infra.Services.Persistences;
 using MyNeuralNetwork.Domain.Dtos.Entities.Nets.Layers;
 using MyNeuralNetwork.Domain.Dtos.Entities.Nets.Networks;
@@ -18,6 +19,7 @@ using MyNeuralNetwork.Domain.Interfaces.Networks.Circuits.Forward;
 using MyNeuralNetwork.Domain.Interfaces.Neurons.Activations;
 using MyNeuralNetwork.Domain.Interfaces.Neurons.Parts;
 using MyNeuralNetwork.Domain.Interfaces.Trainers.Genetics;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using UnityEngine;
@@ -37,17 +39,20 @@ internal class GeneticAlgorithmTrainer : MonoBehaviour
     private int actualNeural = 0;
     private int actualEpoch = 0;
 
+    [SerializeField]
+    internal int numberOfInputNeurons = 40;
+
     IGeneticTrainer geneticTrainer;
 
-    private static double LastFitness = 0;
-
     private GameController gameController;
+    private PersistenceService persistence;
     private double bestFitness = 0;
+
 
     void Start()
     {
         gameController = GameObject.Find("GameController").GetComponent<GameController>();
-
+        persistence = new PersistenceService();
         var ngen = new NeuronGenerator();
         ngen.WeightConfiguration.SetMaxAndMin(-1, 1);
         ngen.BiasConfiguration.SetMaxAndMin(-1, 1);
@@ -66,11 +71,11 @@ internal class GeneticAlgorithmTrainer : MonoBehaviour
         }
     }
 
-    private static int[] GenerateLayerFormat()
+    private int[] GenerateLayerFormat()
     {
         var qtdLayers = 5;
         var qtdNeurons = 128;
-        var qtdNeuronsIn = 32;
+        var qtdNeuronsIn = numberOfInputNeurons + 1;
         var qtdNeuronsOut = 1;
 
         var layers = new int[qtdLayers];
@@ -95,7 +100,6 @@ internal class GeneticAlgorithmTrainer : MonoBehaviour
 
             if (navigator != null && navigator.neuralNetwork != null)
             {
-                LastFitness = AINavigator.LastFitness;
                 if (bestFitness < navigator.neuralNetwork.Fitness)
                     bestFitness = navigator.neuralNetwork.Fitness;
             }
@@ -129,10 +133,6 @@ internal class GeneticAlgorithmTrainer : MonoBehaviour
 
         if (actualEpoch >= numberOfEpochs || neuralNetwork.Fitness > 0.9)
         {
-            var persistence = new NeuralNetworkPersistenceService(GenerateMapper());
-            persistence.Path = "C:\\Projetos\\Unity\\SpaceShooter\\";
-            persistence.FileName = "neural_network.txt";
-
             persistence.Save(neuralNetwork);
             
             gameController.status.text = ($"Number of epochs reached. Fitness: {neuralNetwork.Fitness}. Saved in {persistence.Path}.");
@@ -140,31 +140,5 @@ internal class GeneticAlgorithmTrainer : MonoBehaviour
         }
     }
 
-    private static Mapper GenerateMapper()
-    {
-        var mapperConfiguration = new MapperConfiguration(cfg =>
-        {
-            cfg.CreateMap<NeuralDoubleValue, double>().ConvertUsing(f => f.Value);
-            cfg.CreateMap<double, NeuralDoubleValue>().ConvertUsing(f => new NeuralDoubleValue(f));
-
-            cfg.CreateMap<ICircuitForward, string>().ConvertUsing(c => c.GetType().Name);
-
-            cfg.CreateMap<NeuralFloatValue, float>().ConvertUsing(f => f.Value);
-            cfg.CreateMap<float, NeuralFloatValue>().ConvertUsing(f => new NeuralFloatValue(f));
-
-            cfg.CreateMap<Neuron, NeuronDto>();
-
-            cfg.CreateMap<IActivator, string>().ConstructUsing(c => c.GetType().FullName);
-
-            cfg.CreateMap<ISynapseManager, SynapseManagerDto>();
-
-            cfg.CreateMap<INeuralNetwork, NeuralNetworkDto>();
-
-            cfg.CreateMap<Layer, LayerDto>();
-            cfg.CreateMap<Synapse, SynapseDto>().ForMember(s => s.TargetGuid, opt => opt.MapFrom((x) => x.NeuronSource.Index));
-        });
-
-        return new Mapper(mapperConfiguration);
-    }
 }
 

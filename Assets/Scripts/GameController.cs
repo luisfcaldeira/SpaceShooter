@@ -94,9 +94,16 @@ public class GameController : MonoBehaviour
 
     private void InstantiatePlayer()
     {
-        instantiatedPlayer = Instantiate(player);
-    }
 
+        instantiatedPlayer = Instantiate(player);
+
+        GameObject geneticTrainerGameObject = GameObject.Find("GeneticTrainer");
+        if(geneticTrainerGameObject != null)
+        {
+            var geneticAlgorithmTrainer = geneticTrainerGameObject.GetComponent<GeneticAlgorithmTrainer>();
+            instantiatedPlayer.GetComponentInChildren<MultipleSensorsController>().numberOfSensors = geneticAlgorithmTrainer.numberOfInputNeurons;
+        }
+    }
 
     private void RestartTimer()
     {
@@ -135,7 +142,8 @@ public class GameController : MonoBehaviour
             FillText(x, (float)aiNavigator.x);
             FillText(textActualIndividual, aiNavigator.actualInvidiual);
             FillText(output, aiNavigator.output);
-            FillText(textMutations, aiNavigator.neuralNetwork.CounterOfMutations);
+            if(aiNavigator.neuralNetwork != null)
+                FillText(textMutations, aiNavigator.neuralNetwork.CounterOfMutations);
         }
     }
 

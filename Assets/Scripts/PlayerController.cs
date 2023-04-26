@@ -1,7 +1,5 @@
 using Assets.Scripts.Interfaces;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
-using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour, IHit
 {
