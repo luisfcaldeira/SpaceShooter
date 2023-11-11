@@ -234,7 +234,7 @@ MonoBehaviour:
   amountShieldCooldown: 30
   shieldCooldown: 0
   lifeExpectancy: 600
-  avoidEnemies: 200
+  avoidEnemies: 1000
 --- !u!114 &-6428830196649851674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -341,7 +341,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b6234cb941e6148b3193c3660d9377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfSensors: 35
   layerMask:
     serializedVersion: 2
     m_Bits: 1600

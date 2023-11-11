@@ -39,6 +39,7 @@ public class GameController : MonoBehaviour
 
     [SerializeField]
     private bool followPlayer = false;
+    private bool savedFollowingConfig = false;
 
     [SerializeField]
     private bool continum = false;
@@ -86,6 +87,7 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
+        savedFollowingConfig = followPlayer;
         Time.timeScale = timeScale;
         RestartTimer();
         InstantiatePlayer();
@@ -173,6 +175,7 @@ public class GameController : MonoBehaviour
 
     private void ResetEnemies()
     {
+        ResetFollowConfig();
         var enemies = GameObject.FindGameObjectsWithTag("Enemy");
         foreach(var enemy in enemies)
         {
@@ -260,6 +263,17 @@ public class GameController : MonoBehaviour
                 i++;
             }
         }
+    }
+
+    internal void StopToFollowPlayer()
+    {
+        savedFollowingConfig = followPlayer;
+        followPlayer = false; 
+    }
+
+    private void ResetFollowConfig()
+    {
+        followPlayer = savedFollowingConfig;
     }
 
     internal void EndGame()

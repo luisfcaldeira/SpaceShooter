@@ -523,7 +523,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7565666619616618414, guid: 756aa8a74cf767b49a5c0726fa127925, type: 3}
       propertyPath: followPlayer
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7565666619616618414, guid: 756aa8a74cf767b49a5c0726fa127925, type: 3}
       propertyPath: enemyVelocity
@@ -539,7 +539,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7565666619616618414, guid: 756aa8a74cf767b49a5c0726fa127925, type: 3}
       propertyPath: generateEnemies
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7565666619616618414, guid: 756aa8a74cf767b49a5c0726fa127925, type: 3}
       propertyPath: textDistancePoints

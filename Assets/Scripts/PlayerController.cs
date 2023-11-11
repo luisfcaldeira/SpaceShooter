@@ -52,6 +52,9 @@ public class PlayerController : MonoBehaviour, IHit
     [SerializeField]
     private float lifeExpectancy = 60 * 10;
 
+    [SerializeField]
+    internal float avoidEnemies = 100f;
+
     internal Vector2 myPosition { get; private set; }
 
     public bool IsAlive { get; private set; } = true;
@@ -75,9 +78,6 @@ public class PlayerController : MonoBehaviour, IHit
     private float horDiff = 0.01f;
 
     internal float deadEnemies = 0;
-
-    [SerializeField]
-    private float avoidEnemies = 100f;
 
     void Start()
     {
@@ -160,9 +160,9 @@ public class PlayerController : MonoBehaviour, IHit
 
         DistancePoints = traveledDistance / distanceToTravel;
         LifePoints = elapsedTimeOfLife / lifeExpectancy;
-        DeadEnemies = deadEnemies * 4f / avoidEnemies;
+        DeadEnemies = deadEnemies / avoidEnemies;
 
-        Points = (LifePoints + ReturnToZeroPoints + DeadEnemies) / (2 + 4 + 1);
+        Points = DeadEnemies;
 
         navigator.Feedback(Points);
     }
