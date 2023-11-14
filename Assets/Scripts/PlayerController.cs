@@ -52,6 +52,9 @@ public class PlayerController : MonoBehaviour, IHit
     [SerializeField]
     private float lifeExpectancy = 60 * 10;
 
+    [SerializeField]
+    internal float avoidEnemies = 100f;
+
     internal Vector2 myPosition { get; private set; }
 
     public bool IsAlive { get; private set; } = true;
@@ -76,8 +79,7 @@ public class PlayerController : MonoBehaviour, IHit
 
     internal float deadEnemies = 0;
 
-    [SerializeField]
-    private float avoidEnemies = 100f;
+    private bool _paused = false;
 
     void Start()
     {
@@ -89,6 +91,8 @@ public class PlayerController : MonoBehaviour, IHit
 
     void Update()
     {
+        CheckIfItsPaused();
+
         Move();
 
         FeedbackNavigator();
@@ -104,6 +108,11 @@ public class PlayerController : MonoBehaviour, IHit
         GenerateShield();
     }
 
+    private void CheckIfItsPaused()
+    {
+        _paused = Time.timeScale == 0;
+    }
+
     private void Move()
     {
         var newVelocity = navigator.Move();
@@ -111,7 +120,10 @@ public class PlayerController : MonoBehaviour, IHit
         if (newVelocity.x > 0 && transform.position.x < limitOfX
             || newVelocity.x < 0 && transform.position.x > -limitOfX)
         {
-            traveledDistance += Mathf.Abs(newVelocity.x);
+            if(!_paused)
+            {
+                traveledDistance += Mathf.Abs(newVelocity.x);
+            }
             myRigidbody.velocity = newVelocity * velocity;
         }
     }
@@ -160,9 +172,9 @@ public class PlayerController : MonoBehaviour, IHit
 
         DistancePoints = traveledDistance / distanceToTravel;
         LifePoints = elapsedTimeOfLife / lifeExpectancy;
-        DeadEnemies = deadEnemies * 4f / avoidEnemies;
+        DeadEnemies = deadEnemies / avoidEnemies;
 
-        Points = (LifePoints + ReturnToZeroPoints + DeadEnemies) / (2 + 4 + 1);
+        Points = DeadEnemies;
 
         navigator.Feedback(Points);
     }

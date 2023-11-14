@@ -4,7 +4,7 @@
 MemorySettings:
   m_ObjectHideFlags: 0
   m_EditorMemorySettings:
-    m_MainAllocatorBlockSize: -1
+    m_MainAllocatorBlockSize: 16777216
     m_ThreadAllocatorBlockSize: -1
     m_MainGfxBlockSize: -1
     m_ThreadGfxBlockSize: -1

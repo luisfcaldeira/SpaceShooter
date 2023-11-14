@@ -7,11 +7,6 @@ public class ShieldController : MonoBehaviour
 
     internal GameObject player;
 
-    void Start()
-    {
-        
-    }
-
     void Update()
     {
         Move();

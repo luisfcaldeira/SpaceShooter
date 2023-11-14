@@ -9,15 +9,12 @@ using MyNeuralNetwork.Domain.Entities.Nets.Conversors;
 using MyNeuralNetwork.Domain.Entities.Nets.Generators.Supports;
 using MyNeuralNetwork.Domain.Entities.Nets.Layers;
 using MyNeuralNetwork.Domain.Entities.Nets.Networks;
-using MyNeuralNetwork.Domain.Entities.Nets.Networks.Circuits.Forward;
 using MyNeuralNetwork.Domain.Entities.Nets.Neurons;
 using MyNeuralNetwork.Domain.Entities.Nets.Neurons.Parts;
 using MyNeuralNetwork.Domain.Interfaces.Networks;
 using MyNeuralNetwork.Domain.Interfaces.Networks.Circuits.Forward;
 using MyNeuralNetwork.Domain.Interfaces.Neurons.Activations;
 using MyNeuralNetwork.Domain.Interfaces.Neurons.Parts;
-using System.Linq.Expressions;
-using System;
 
 namespace Assets.Scripts.AI.Supports
 {
@@ -52,30 +49,32 @@ namespace Assets.Scripts.AI.Supports
 
         private Mapper GenerateMapper()
         {
-            MapperConfiguration mapperConfiguration = new MapperConfiguration(delegate (IMapperConfigurationExpression cfg)
+            var mapperConfiguration = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<NeuralDoubleValue, double>().ConvertUsing((NeuralDoubleValue f) => f.Value);
-                cfg.CreateMap<double, NeuralDoubleValue>().ConvertUsing((double f) => new NeuralDoubleValue(f));
-                cfg.CreateMap<ICircuitForward, string>().ConvertUsing((ICircuitForward c) => c.GetType().Name);
-                cfg.CreateMap<NeuralFloatValue, float>().ConvertUsing((NeuralFloatValue f) => f.Value);
-                cfg.CreateMap<float, NeuralFloatValue>().ConvertUsing((float f) => new NeuralFloatValue(f));
-                cfg.CreateMap<Neuron, NeuronDto>().ForMember((NeuronDto member) => member.Activator, delegate (IMemberConfigurationExpression<Neuron, NeuronDto, string> opt)
-                {
-                    opt.MapFrom((Neuron item) => item.Activation.GetType().FullName);
-                });
-                (cfg.CreateMap<IActivator, string>()).ConstructUsing((IActivator c) => c.GetType().FullName);
+                cfg.CreateMap<NeuralDoubleValue, double>().ConvertUsing(f => f.Value);
+                cfg.CreateMap<double, NeuralDoubleValue>().ConvertUsing(f => new NeuralDoubleValue(f));
+
+                cfg.CreateMap<ICircuitForward, string>().ConvertUsing(c => c.GetType().Name);
+
+                cfg.CreateMap<NeuralFloatValue, float>().ConvertUsing(f => f.Value);
+                cfg.CreateMap<float, NeuralFloatValue>().ConvertUsing(f => new NeuralFloatValue(f));
+
+                cfg.CreateMap<Neuron, NeuronDto>()
+                    .ForMember(member => member.Activator, opt => opt.MapFrom(item => item.Activation.GetType().FullName));
+
+                cfg.CreateMap<IActivator, string>().ConstructUsing(c => c.GetType().FullName);
+
                 cfg.CreateMap<ISynapseManager, SynapseManagerDto>();
-                cfg.CreateMap<INeuralNetwork, NeuralNetworkDto>().ForMember((NeuralNetworkDto member) => member.CircuitForward, delegate (IMemberConfigurationExpression<INeuralNetwork, NeuralNetworkDto, string> opt)
-                {
-                    opt.MapFrom((INeuralNetwork item) => item.CircuitForward.GetType().FullName);
-                });
+
+                cfg.CreateMap<INeuralNetwork, NeuralNetworkDto>()
+                    .ForMember(member => member.CircuitForward, opt => opt.MapFrom(item => item.CircuitForward.GetType().FullName));
+
                 cfg.CreateMap<Layer, LayerDto>();
-                cfg.CreateMap<Synapse, SynapseDto>().ForMember((SynapseDto s) => s.TargetGuid, delegate (IMemberConfigurationExpression<Synapse, SynapseDto, int> opt)
-                {
-                    opt.MapFrom((Synapse y) => y.NeuronSource.Index);
-                });
+                cfg.CreateMap<Synapse, SynapseDto>().ForMember(s => s.TargetGuid, opt => opt.MapFrom((y) => y.NeighborNeuron.Index));
             });
-            LambdaExpression lambdaExpression = mapperConfiguration.BuildExecutionPlan(typeof(NeuralNetwork), typeof(NeuralNetworkDto));
+
+            var executionPlan = mapperConfiguration.BuildExecutionPlan(typeof(NeuralNetwork), typeof(NeuralNetworkDto));
+
             return new Mapper(mapperConfiguration);
         }
     }

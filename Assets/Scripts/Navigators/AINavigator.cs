@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class AINavigator : MonoBehaviour, INavigator
 {
+    [SerializeField]
+    private double percentOfEnemiesUntilEvolve = 0.9;
+
     public INeuralNetwork neuralNetwork = null;
     public static double LastFitness = 0;
 
@@ -11,6 +14,15 @@ public class AINavigator : MonoBehaviour, INavigator
 
     internal float output = 0;
     internal int actualInvidiual;
+
+    private PlayerController playerController;
+
+    private bool evolved = false;
+
+    private void Start()
+    {
+        playerController= GetComponent<PlayerController>();
+    }
 
     public Vector2 Move()
     {
@@ -57,6 +69,14 @@ public class AINavigator : MonoBehaviour, INavigator
 
     public void Feedback(float points)
     {
+        var gameController = GameObject.Find("GameController").GetComponent<GameController>();
+
+        if(points >= percentOfEnemiesUntilEvolve && !evolved)
+        {
+            gameController.StopToFollowPlayer();
+            evolved = true;
+        } 
+
         LastFitness = points;
 
         if(neuralNetwork != null)

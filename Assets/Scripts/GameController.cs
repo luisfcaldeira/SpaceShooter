@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -39,6 +40,7 @@ public class GameController : MonoBehaviour
 
     [SerializeField]
     private bool followPlayer = false;
+    private bool savedFollowingConfig = false;
 
     [SerializeField]
     private bool continum = false;
@@ -83,9 +85,12 @@ public class GameController : MonoBehaviour
     [SerializeField]
     internal float timeScale = 1.0f;
 
+    private bool _paused = false;
+
 
     void Start()
     {
+        savedFollowingConfig = followPlayer;
         Time.timeScale = timeScale;
         RestartTimer();
         InstantiatePlayer();
@@ -122,6 +127,12 @@ public class GameController : MonoBehaviour
         {
             RestartTimer();
             EnemiesGenerate();
+        }
+
+        if(Input.GetKeyDown(KeyCode.P)) 
+        {
+            Time.timeScale = System.Convert.ToInt16(_paused);
+            _paused = !_paused;
         }
 
     }
@@ -173,6 +184,7 @@ public class GameController : MonoBehaviour
 
     private void ResetEnemies()
     {
+        ResetFollowConfig();
         var enemies = GameObject.FindGameObjectsWithTag("Enemy");
         foreach(var enemy in enemies)
         {
@@ -260,6 +272,17 @@ public class GameController : MonoBehaviour
                 i++;
             }
         }
+    }
+
+    internal void StopToFollowPlayer()
+    {
+        savedFollowingConfig = followPlayer;
+        followPlayer = false; 
+    }
+
+    private void ResetFollowConfig()
+    {
+        followPlayer = savedFollowingConfig;
     }
 
     internal void EndGame()
