@@ -118,7 +118,7 @@ internal class GeneticAlgorithmTrainer : MonoBehaviour
             actualEpoch++;
         }
 
-        if (actualEpoch >= numberOfEpochs || neuralNetwork.Fitness > 0.9  || true)
+        if (actualEpoch >= numberOfEpochs || neuralNetwork.Fitness > 0.9)
         {
             persistence.Save(neuralNetwork);
             
