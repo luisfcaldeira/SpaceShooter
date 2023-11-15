@@ -1,27 +1,14 @@
 ﻿using Assets.Scripts.AI.Supports;
-using AutoMapper;
-using Core.Infra.Services.Persistences;
-using MyNeuralNetwork.Domain.Dtos.Entities.Nets.Layers;
-using MyNeuralNetwork.Domain.Dtos.Entities.Nets.Networks;
-using MyNeuralNetwork.Domain.Dtos.Entities.Nets.Neurons;
-using MyNeuralNetwork.Domain.Dtos.Entities.Nets.Neurons.Parts;
-using MyNeuralNetwork.Domain.Entities.Commons.Fields.Numerics;
 using MyNeuralNetwork.Domain.Entities.Nets.Generators;
 using MyNeuralNetwork.Domain.Entities.Nets.Generators.Supports;
-using MyNeuralNetwork.Domain.Entities.Nets.Layers;
 using MyNeuralNetwork.Domain.Entities.Nets.Networks;
 using MyNeuralNetwork.Domain.Entities.Nets.Neurons;
 using MyNeuralNetwork.Domain.Entities.Nets.Neurons.Activations;
 using MyNeuralNetwork.Domain.Entities.Nets.Neurons.Parts;
 using MyNeuralNetwork.Domain.Entities.Nets.Trainers.Genetics;
 using MyNeuralNetwork.Domain.Interfaces.Networks;
-using MyNeuralNetwork.Domain.Interfaces.Networks.Circuits.Forward;
-using MyNeuralNetwork.Domain.Interfaces.Neurons.Activations;
-using MyNeuralNetwork.Domain.Interfaces.Neurons.Parts;
 using MyNeuralNetwork.Domain.Interfaces.Trainers.Genetics;
-using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using UnityEngine;
 
 internal class GeneticAlgorithmTrainer : MonoBehaviour
@@ -131,7 +118,7 @@ internal class GeneticAlgorithmTrainer : MonoBehaviour
             actualEpoch++;
         }
 
-        if (actualEpoch >= numberOfEpochs || neuralNetwork.Fitness > 0.9)
+        if (actualEpoch >= numberOfEpochs || neuralNetwork.Fitness > 0.9  || true)
         {
             persistence.Save(neuralNetwork);
             

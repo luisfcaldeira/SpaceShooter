@@ -15,6 +15,7 @@ using MyNeuralNetwork.Domain.Interfaces.Networks;
 using MyNeuralNetwork.Domain.Interfaces.Networks.Circuits.Forward;
 using MyNeuralNetwork.Domain.Interfaces.Neurons.Activations;
 using MyNeuralNetwork.Domain.Interfaces.Neurons.Parts;
+using UnityEngine;
 
 namespace Assets.Scripts.AI.Supports
 {
@@ -24,7 +25,7 @@ namespace Assets.Scripts.AI.Supports
         private DtoToNeuralNetwork _dtoToNnConversor;
         private Mapper _mapper;
 
-        public string Path { get; set; } = "C:\\Projetos\\Unity\\SpaceShooter\\";
+        public string Path { get; set; } = Application.dataPath;
         public string FileName { get; set; } = "neural_network.txt";
 
         public PersistenceService()
