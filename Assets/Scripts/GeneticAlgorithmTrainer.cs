@@ -61,7 +61,7 @@ internal class GeneticAlgorithmTrainer : MonoBehaviour
     private int[] GenerateLayerFormat()
     {
         var qtdLayers = 5;
-        var qtdNeurons = 128;
+        var qtdNeurons = 100;
         var qtdNeuronsIn = numberOfInputNeurons + 1;
         var qtdNeuronsOut = 1;
 
