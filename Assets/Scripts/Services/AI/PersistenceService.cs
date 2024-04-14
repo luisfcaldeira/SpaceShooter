@@ -25,7 +25,7 @@ namespace Assets.Scripts.AI.Supports
         private DtoToNeuralNetwork _dtoToNnConversor;
         private Mapper _mapper;
 
-        public string Path { get; set; } = Application.dataPath;
+        public string Path { get; set; } = Application.dataPath + "/";
         public string FileName { get; set; } = "neural_network.txt";
 
         public PersistenceService()
