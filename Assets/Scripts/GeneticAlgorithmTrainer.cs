@@ -18,7 +18,7 @@ internal class GeneticAlgorithmTrainer : MonoBehaviour
     NNGenerator nnGen;
 
     [SerializeField]
-    private int numberOfNeuralNetworks = 10;
+    private int numberOfNeuralNetworks = 4;
 
     [SerializeField]
     private int numberOfEpochs = 5000;
@@ -61,7 +61,7 @@ internal class GeneticAlgorithmTrainer : MonoBehaviour
     private int[] GenerateLayerFormat()
     {
         var qtdLayers = 5;
-        var qtdNeurons = 128;
+        var qtdNeurons = 100;
         var qtdNeuronsIn = numberOfInputNeurons + 1;
         var qtdNeuronsOut = 1;
 
